@@ -22,7 +22,7 @@ extern "C" {
         uint64_t totalControlPointCount;
         char fileInfo[40];
     };
-    BCCREAD_API int ReadBCCFile(const char* bccFilePath, unsigned char* vertexBuffer,  unsigned int * indicesBuffer, unsigned int& vertexNum, unsigned int& indexNum)
+    BCCREAD_API int ReadBCCFile(const char* bccFilePath, float* vertexBuffer,  int * indicesBuffer, int& vertexNum, int& indexNum)
     {
             BCCHeader header;
             FILE* pFile = fopen(bccFilePath, "rb");
@@ -50,22 +50,24 @@ extern "C" {
             int prevCP = 0;
             for (uint64_t i = 0; i < header.curveCount; i++)
             {
-                int curveControlPointCount;
-                fread(&curveControlPointCount, sizeof(int), 1, pFile);
-                isCurveLoop[i] = curveControlPointCount < 0;
-                if (curveControlPointCount < 0) curveControlPointCount = -curveControlPointCount;
-
-                fread(cp, sizeof(FVector3), curveControlPointCount, pFile);
-
-                cp += curveControlPointCount;
-                firstControlPoint[i] = prevCP;
-                prevCP += curveControlPointCount;
+				int curveControlPointCount;
+				fread(&curveControlPointCount, sizeof(int), 1, pFile);
+				isCurveLoop[i] = curveControlPointCount < 0;
+				if (curveControlPointCount < 0) curveControlPointCount = -curveControlPointCount;
+				fread(cp, sizeof(FVector3), curveControlPointCount, pFile);
+				cp += curveControlPointCount;
+				firstControlPoint[i] = prevCP;
+				prevCP += curveControlPointCount;
             }
             firstControlPoint[header.curveCount] = prevCP;
 
             // TODO: LOOP
-            std::vector<unsigned int> indices;
-            for (int i = 0; i < header.curveCount; i++)
+            std::vector<int> indices;
+
+
+			unsigned int curveUsed = header.curveCount;
+
+            for (int i = 0; i < curveUsed; i++)
             {
                 int curveControlPointNum = firstControlPoint[i + 1] - firstControlPoint[i];
                 int startIndex = indices.size();
@@ -77,12 +79,14 @@ extern "C" {
                     indices[startIndex++] = firstControlPoint[i] + j + 2;
                     indices[startIndex++] = firstControlPoint[i] + j + 3;
                 }
+
+				
             }
 
             indexNum = indices.size();
 
             memcpy(vertexBuffer, controlPoints.data(), header.totalControlPointCount * sizeof(FVector3));
-            memcpy(indicesBuffer, indices.data(), indexNum * sizeof(unsigned int));
+            memcpy(indicesBuffer, indices.data(), indexNum * sizeof(int));
 
         return 0;
     }
