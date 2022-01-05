@@ -58,13 +58,18 @@ public class Movement : MonoBehaviour
         //Input.GetAxis("MouseX")获取鼠标移动的X轴的距离
         var xRotationSpeed = 250.0f;
         var yRotationSpeed = 120.0f;
-        xRotation -= Input.GetAxis("Mouse X") * xRotationSpeed * 0.02f;
-        yRotation += Input.GetAxis("Mouse Y") * yRotationSpeed * 0.02f;
 
-        yRotation = ClampValue(yRotation, yRotationMinLimit, yRotationMaxLimit);//这个函数在结尾
-                                                                                //欧拉角转化为四元数
-        Quaternion rotation = Quaternion.Euler(-yRotation, -xRotation, 0);
-        gameObject.transform.rotation = rotation;
+        if (Input.GetMouseButton(0))
+        {
+            xRotation -= Input.GetAxis("Mouse X") * xRotationSpeed * 0.02f;
+            yRotation += Input.GetAxis("Mouse Y") * yRotationSpeed * 0.02f;
+
+            yRotation = ClampValue(yRotation, yRotationMinLimit, yRotationMaxLimit);//这个函数在结尾
+                                                                                    //欧拉角转化为四元数
+            Quaternion rotation = Quaternion.Euler(-yRotation, -xRotation, 0);
+            gameObject.transform.rotation = rotation;
+        }
+        
 
 
         //Debug.Log(Input.GetAxis("Mouse X")*100000);

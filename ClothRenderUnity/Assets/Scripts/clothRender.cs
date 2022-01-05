@@ -14,12 +14,13 @@ public class clothRender : MonoBehaviour
 	ComputeBuffer _buffer;
 
 
-    string bccFileName = "C:/Users/fuxihao/Desktop/ClothRenderingUnity/ClothRenderUnity/Assets/Models/dress1.bcc";
+    //string bccFileName = "Assets/Models/dress1.bcc";
+    string bccFileName = "Assets/Models/glove.bcc";
     [DllImport("BCCFileReader", EntryPoint = "ReadBCCFile")]
 	public static unsafe extern int ReadBCCFile(string fileName, Vector3* vertexBuffer, int* indexBuffer, ref int vertexNum, ref int indexNum);
 
 
-	void Awake()
+	void Start()
 	{
 		Mesh mesh = new Mesh();
 
@@ -48,26 +49,27 @@ public class clothRender : MonoBehaviour
         mesh.vertices = vertices;
         mesh.SetIndices(indices, MeshTopology.Quads, 0);
         //mesh.SetIndices(indices, MeshTopology.Points, 0);// for debug
-        mesh.bounds = new Bounds(Vector3.zero, 10000000 * Vector3.one);
+        mesh.bounds = new Bounds(Vector3.zero, 100000000 * Vector3.one);
 		GetComponent<MeshFilter>().mesh = mesh;
 
-        
-	}
+        Debug.Log(vNum);
+        Debug.Log(iNum);
+    }
 
 	// Start is called before the first frame update
-	void Start()
-    {
-		//Vector3[] arr = new Vector3[16];
-		//for (int i = 0; i < arr.Length; i++)
-		//{
-		//	_controlPoints[i].localScale = Vector3.one * _controlpointScale;
-		//	_controlPoints[i].GetComponent<Renderer>().enabled = true;
-		//	arr[i] = _controlPoints[i].localPosition;
-		//}
+	//void Start()
+ //   {
+	//	//Vector3[] arr = new Vector3[16];
+	//	//for (int i = 0; i < arr.Length; i++)
+	//	//{
+	//	//	_controlPoints[i].localScale = Vector3.one * _controlpointScale;
+	//	//	_controlPoints[i].GetComponent<Renderer>().enabled = true;
+	//	//	arr[i] = _controlPoints[i].localPosition;
+	//	//}
 
-		//_buffer.SetData(arr);
-		//GetComponent<Renderer>().material.SetBuffer("_controlPoints", _buffer);
-	}
+	//	//_buffer.SetData(arr);
+	//	//GetComponent<Renderer>().material.SetBuffer("_controlPoints", _buffer);
+	//}
 
     // Update is called once per frame
     void Update()
