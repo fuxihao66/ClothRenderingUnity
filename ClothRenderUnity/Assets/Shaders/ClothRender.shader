@@ -234,7 +234,7 @@
 
             // Patch Constant Function
             HS_CONSTANT_OUTPUT hsConstant(
-                InputPatch<VS_OUTPUT, 4> ip,
+                InputPatch<VS_OUTPUT, 4> ip, // TODO: 这里应该是outputpatch和out_point_num?
                 uint PatchID : SV_PrimitiveID)
             {
                 HS_CONSTANT_OUTPUT output;
